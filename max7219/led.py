@@ -119,7 +119,7 @@ class device(object):
         # Allow subclasses to pre-process the buffer: they shouldn't
         # alter it, so make a copy first.
         buf = self._preprocess_buffer(list(self._buffer))
-        assert len(buf) == len(self._buffer), "Preprocessed buffer is wrong size"
+#        assert len(buf) == len(self._buffer), "Preprocessed buffer is wrong size"
         if self._vertical:
             tmp_buf = []
             for x in range(0, self._cascaded):
@@ -407,3 +407,16 @@ class matrix(device):
         self._orientation = angle
         if redraw:
             self.flush()
+
+class matrix5x7(matrix):
+    def _preprocess_buffer(self, buf):
+        result = []
+        for i in range(0, self._cascaded * self.NUM_DIGITS, self.NUM_DIGITS):
+            tile1 = buf[i:i+6]
+            tileMid = [0,0,0]
+            tile2 = buf[i+6:i+self.NUM_DIGITS]
+            result += tile1 + tileMid + tile2
+
+        buf = result
+
+        return super(matrix5x7, self)._preprocess_buffer(buf)
