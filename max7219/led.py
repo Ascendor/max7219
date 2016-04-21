@@ -411,12 +411,11 @@ class matrix(device):
 class matrix5x7(matrix):
     def _preprocess_buffer(self, buf):
         result = []
-        for i in range(0, self._cascaded * self.NUM_DIGITS, self.NUM_DIGITS):
+        for i in range(0, self._cascaded * self.NUM_DIGITS, 5):
             tile1 = buf[i:i+6]
-            tileMid = [0,0,0]
-            tile2 = buf[i+6:i+self.NUM_DIGITS]
-            result += tile1 + tileMid + tile2
-
+            tileMid = [0] * 2 #Why 2? Why not 3??
+            result += tile1 + tileMid
+ 
         buf = result
 
         return super(matrix5x7, self)._preprocess_buffer(buf)
